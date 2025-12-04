@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Police pixel art */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  /* 3 couleurs maximum - Light mode */
+  --bg-primary: #ffffff;        /* Fond blanc */
+  --bg-secondary: #f5f5f5;      /* Fond gris clair */
+  --text-primary: #000000;      /* Texte noir */
+  --accent: #2060b0;            /* Accent bleu */
+  --border-color: #000000;      /* Bordure noire */
+  --pixel-shadow: #000000;      /* Ombre noire */
+  --surface: #ffffff;           /* Surface blanche */
+}
+
+.dark {
+  /* 3 couleurs maximum - Dark mode */
+  --bg-primary: #000000;         /* Fond noir */
+  --bg-secondary: #1a1a1a;      /* Fond gris foncé */
+  --text-primary: #ffffff;      /* Texte blanc */
+  --accent: #50a0ff;            /* Accent bleu */
+  --border-color: #ffffff;      /* Bordure blanche */
+  --pixel-shadow: #ffffff;      /* Ombre blanche */
+  --surface: #1a1a1a;           /* Surface grise */
+}
+
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', monospace;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+  line-height: 2;
+  min-height: 100vh;
+}
+
+/* Scrollbar pixelisée - Light mode */
+.light ::-webkit-scrollbar {
+  width: 14px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f8f8d0;
+  border: 2px solid #2d2d2d;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #2d2d2d;
+  border: 2px solid #f8f8d0;
+  box-shadow: inset 0 0 0 2px #2d2d2d;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #2060b0;
+}
+
+/* Scrollbar pixelisée - Dark mode */
+.dark ::-webkit-scrollbar {
+  width: 14px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #000000;
+  border: 2px solid #ffffff;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: inset 0 0 0 2px #ffffff;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #50a0ff;
+}
+
+/* Effet de pixelisation pour les bordures */
+.pixel-border {
+  border: 4px solid var(--border-color);
+  box-shadow: 
+    0 0 0 2px var(--bg-primary),
+    6px 6px 0 0 var(--pixel-shadow),
+    6px 6px 0 2px var(--bg-primary);
+}
+
+.pixel-button {
+  border: 4px solid var(--border-color);
+  box-shadow: 
+    0 0 0 2px var(--bg-primary),
+    6px 6px 0 0 var(--pixel-shadow),
+    6px 6px 0 2px var(--bg-primary);
+  transition: all 0.1s;
+  font-family: 'Press Start 2P', monospace;
+  text-transform: uppercase;
+  background-color: var(--surface);
+  font-size: 12px;
+}
+
+.pixel-button:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 
+    0 0 0 2px var(--bg-primary),
+    3px 3px 0 0 var(--pixel-shadow),
+    3px 3px 0 2px var(--bg-primary);
+}
+
+.pixel-button:active {
+  transform: translate(6px, 6px);
+  box-shadow: 
+    0 0 0 2px var(--bg-primary);
+}
+
+/* Animation de clignotement pixel */
+@keyframes pixel-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.pixel-blink {
+  animation: pixel-blink 1s infinite;
+}
+
+/* Effet de texte pixelisé avec glow - uniquement en dark mode */
+.pixel-text {
+  letter-spacing: 2px;
+}
+
+.dark .pixel-text {
+  text-shadow: 
+    0 0 10px currentColor,
+    0 0 20px currentColor,
+    0 0 30px currentColor;
+}
+
+/* Effet de glow pour les textes importants - uniquement en dark mode */
+.text-glow {
+  text-shadow: none;
+}
+
+.dark .text-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+}
+
+.text-glow-red {
+  text-shadow: none;
+}
+
+.dark .text-glow-red {
+  text-shadow: 
+    0 0 5px var(--accent-red),
+    0 0 10px var(--accent-red),
+    0 0 15px var(--accent-red);
+}
+
+.text-glow-blue {
+  text-shadow: none;
+}
+
+.dark .text-glow-blue {
+  text-shadow: 
+    0 0 5px var(--accent-blue),
+    0 0 10px var(--accent-blue),
+    0 0 15px var(--accent-blue);
+}
+
+.text-glow-green {
+  text-shadow: none;
+}
+
+.dark .text-glow-green {
+  text-shadow: 
+    0 0 5px var(--accent-green),
+    0 0 10px var(--accent-green),
+    0 0 15px var(--accent-green);
+}
+
+.text-glow-yellow {
+  text-shadow: none;
+}
+
+.dark .text-glow-yellow {
+  text-shadow: 
+    0 0 5px var(--accent-yellow),
+    0 0 10px var(--accent-yellow),
+    0 0 15px var(--accent-yellow);
+}
+
+code {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+}
+
+/* Input pixelisé */
+.pixel-input {
+  border: 4px solid var(--border-color);
+  box-shadow: 
+    inset 3px 3px 0 var(--bg-primary),
+    inset -3px -3px 0 var(--pixel-shadow);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  padding: 12px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+.pixel-input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 
+    inset 3px 3px 0 var(--bg-primary),
+    inset -3px -3px 0 var(--accent-blue),
+    0 0 12px var(--accent-blue);
+}
+
+/* Animation flottante pour l'avatar */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}

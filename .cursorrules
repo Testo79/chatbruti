@@ -1,0 +1,19 @@
+# Règles pour le projet Chat-rlatan
+
+## Contexte
+Projet pour la Nuit de l'Info 2025 - Chatbot humoristique "Maître Charlatan"
+
+## Stack
+- React 18.2 + TypeScript
+- Vite pour le build
+- Tailwind CSS pour le styling
+- 100% côté client (pas de backend)
+
+## Conventions
+- Composants fonctionnels avec hooks
+- Props typées avec TypeScript
+- Tailwind pour tous les styles
+- Pas d'API externes
+- Design responsive obligatoire
+
+
