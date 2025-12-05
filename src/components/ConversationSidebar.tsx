@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getUserConversations, deleteConversation, createConversation, type Conversation } from '../services/conversationService';
+import { getUserConversations, deleteConversation, type Conversation } from '../services/conversationService';
 import type { Message } from './ChatMessage';
 
 interface ConversationSidebarProps {

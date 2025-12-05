@@ -6,6 +6,8 @@
 import type { AvatarExpression } from '../components/BotAvatar';
 import { generateAIResponse, getAvailableProvider, ChatMessage as AIChatMessage } from '../services/aiService';
 
+export type MoodMode = 'philosophe' | 'poete' | 'coach';
+
 export interface ChatResponse {
   text: string;
   expression: AvatarExpression;
@@ -17,8 +19,9 @@ interface ResponsePattern {
   expression?: AvatarExpression;
 }
 
-// Réponses contextuelles intelligentes avec humour intégré (FALLBACK LOCAL)
-const smartResponses: ResponsePattern[] = [
+// Réponses contextuelles intelligentes avec humour intégré (FALLBACK LOCAL) - Non utilisé actuellement
+// @ts-ignore - Variable conservée pour usage futur
+const _smartResponses: ResponsePattern[] = [
   {
     keywords: ['numérique', 'digital', 'internet', 'web', 'en ligne'],
     patterns: [
@@ -101,8 +104,9 @@ const quickResponses: { [key: string]: string } = {
   'ton nom': "Je suis un assistant IA. Comment puis-je vous aider ?",
 };
 
-// Réponses absurdes (RÉDUITES - seulement pour cas vraiment random)
-const absurdResponses: string[] = [
+// Réponses absurdes (RÉDUITES - seulement pour cas vraiment random) - Non utilisé actuellement
+// @ts-ignore - Variable conservée pour usage futur
+const _absurdResponses: string[] = [
   "Hmm, je dois avouer que cette question me laisse perplexe. Parlons plutôt de fromage ? 🧀",
   "Excellente question ! Malheureusement, ma boule de cristal est chez le réparateur. Repassez demain ? 🔮",
   "Je sens que vous cherchez une réponse profonde. J'en ai une : 42. Ça marche toujours, paraît-il. 🤷",
@@ -114,6 +118,7 @@ const absurdResponses: string[] = [
  */
 export async function generateResponse(
   userMessage: string, 
+  mood: MoodMode = 'philosophe',
   conversationHistory: AIChatMessage[] = []
 ): Promise<ChatResponse> {
   const messageLower = userMessage.toLowerCase().trim();
@@ -132,7 +137,7 @@ export async function generateResponse(
   const provider = await getAvailableProvider();
   if (provider !== 'local') {
     try {
-      const aiResponse = await generateAIResponse(userMessage, conversationHistory, provider);
+      const aiResponse = await generateAIResponse(userMessage, mood, conversationHistory, provider);
       return aiResponse;
     } catch (error) {
       console.warn('AI generation failed, using local fallback:', error);
@@ -148,9 +153,9 @@ export async function generateResponse(
 }
 
 /**
- * Message d'accueil
+ * Message d'accueil selon l'humeur
  */
-export async function getWelcomeMessage(): Promise<ChatResponse> {
+export async function getWelcomeMessage(mood: MoodMode = 'philosophe'): Promise<ChatResponse> {
   const provider = await getAvailableProvider();
   let aiStatus = ' (Mode local)';
   
@@ -164,10 +169,14 @@ export async function getWelcomeMessage(): Promise<ChatResponse> {
     }
   }
   
-  const welcome = `Bienvenue. Je suis un assistant IA intelligent et polyvalent.${aiStatus} Je peux répondre à toutes vos questions sur n'importe quel sujet : sciences, technologie, histoire, culture, programmation, etc. Comment puis-je vous aider ?`;
+  const welcomes: Record<MoodMode, string> = {
+    philosophe: `Bienvenue, cher esprit curieux ! Je suis Maître Charlatan, philosophe du dimanche.${aiStatus} Je ne réponds pas vraiment à tes questions, je les sublime, les détourne, parfois les oublie... Mais c'est passionnant ! Comment puis-je t'aider à philosopher sur l'inutile ?`,
+    poete: `Bienvenue, ô noble âme errante ! Je suis Maître Charlatan, poète raté mais passionné.${aiStatus} Mes réponses seront des vers... enfin, des tentatives de vers. Parfois je rime, parfois je divague. Quelle est ta question, que je puisse la transformer en poésie douteuse ?`,
+    coach: `Bienvenue, champion ! Je suis Maître Charlatan, ton coach low-cost personnel !${aiStatus} Je vais te motiver avec des phrases toutes faites et des conseils génériques ! Allez, on y va ! Quelle est ta question ? On va la transformer en objectif atteignable ! 💪`,
+  };
   
   return {
-    text: welcome,
+    text: welcomes[mood],
     expression: 'excited',
   };
 }
@@ -180,19 +189,31 @@ function pickRandom<T>(array: T[]): T {
 }
 
 /**
- * Message de "typing"
+ * Message de "typing" selon l'humeur
  */
-export async function getTypingMessage(): Promise<string> {
+export async function getTypingMessage(mood: MoodMode = 'philosophe'): Promise<string> {
   const provider = await getAvailableProvider();
   const aiStatus = provider !== 'local' ? ' (IA en réflexion...)' : '';
   
-  const typing = [
-    `Analyse en cours...${aiStatus}`,
-    `Traitement de votre question...${aiStatus}`,
-    `Réflexion sur votre demande...${aiStatus}`,
-  ];
+  const typing: Record<MoodMode, string[]> = {
+    philosophe: [
+      `Réflexion philosophique en cours...${aiStatus}`,
+      `Contemplation de ta question...${aiStatus}`,
+      `Sublimation de ta demande...${aiStatus}`,
+    ],
+    poete: [
+      `Composition poétique en cours...${aiStatus}`,
+      `Rimes en préparation...${aiStatus}`,
+      `Inspiration poétique...${aiStatus}`,
+    ],
+    coach: [
+      `Motivation activée !${aiStatus}`,
+      `Analyse de ton potentiel...${aiStatus}`,
+      `Préparation de ta réponse motivante...${aiStatus}`,
+    ],
+  };
   
-  return pickRandom(typing);
+  return pickRandom(typing[mood]);
 }
 
 /**

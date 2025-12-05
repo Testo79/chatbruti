@@ -18,23 +18,23 @@ const ConversationHistory: React.FC<ConversationHistoryProps> = ({
 
   useEffect(() => {
     if (user) {
-      loadConversations();
+      loadConversations().catch(console.error);
     }
   }, [user]);
 
-  const loadConversations = () => {
+  const loadConversations = async () => {
     if (!user) return;
-    const userConversations = getUserConversations(user.id);
+    const userConversations = await getUserConversations(user.id);
     setConversations(userConversations.sort((a, b) => 
       new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     ));
   };
 
-  const handleDelete = (conversationId: string, e: React.MouseEvent) => {
+  const handleDelete = async (conversationId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Êtes-vous sûr de vouloir supprimer cette conversation ?')) {
-      deleteConversation(conversationId);
-      loadConversations();
+      await deleteConversation(conversationId);
+      await loadConversations();
       if (conversationId === currentConversationId) {
         onLoadConversation([], '');
       }

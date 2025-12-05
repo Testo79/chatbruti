@@ -6,7 +6,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   generateResponse, 
   getWelcomeMessage, 
-  getTypingMessage
+  getTypingMessage,
+  MoodMode
 } from '../utils/chatEngine';
 import type { ChatMessage as AIChatMessage } from '../services/aiService';
 import { 
@@ -31,6 +32,7 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [typingMessage, setTypingMessage] = useState<string>('');
+  const [mood, setMood] = useState<MoodMode>('philosophe');
   const [avatarExpression, setAvatarExpression] = useState<AvatarExpression>('idle');
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(conversationId || null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -51,7 +53,7 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
     // Si pas de messages initiaux et pas de conversationId, charger le message de bienvenue
     if (!conversationId) {
       const loadWelcome = async () => {
-        const welcomeResponse = await getWelcomeMessage();
+        const welcomeResponse = await getWelcomeMessage(mood);
         const welcomeMsg: Message = {
           id: '0',
           text: welcomeResponse.text,
@@ -79,7 +81,7 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
       // Si on a un conversationId mais pas de messages, réinitialiser
       setMessages([]);
     }
-  }, [initialMessages, conversationId]);
+  }, [initialMessages, mood, conversationId]);
   
   // Sauvegarder les messages quand ils changent
   useEffect(() => {
@@ -162,7 +164,7 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
     scrollToBottom(true);
     
     // Générer le message de typing
-    const typingMsg = await getTypingMessage();
+    const typingMsg = await getTypingMessage(mood);
     setTypingMessage(typingMsg);
     
     // Préparer l'historique de conversation pour l'IA
@@ -180,7 +182,7 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
     });
     
     try {
-      const response = await generateResponse(inputValue, conversationHistory);
+      const response = await generateResponse(inputValue, mood, conversationHistory);
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -235,23 +237,62 @@ const ChatCharlatan: React.FC<ChatCharlatanProps> = ({
   
   return (
     <div className="bg-[#f5f5f5] dark:bg-[#1a1a1a] pixel-border overflow-hidden">
-      {/* En-tête du chat avec avatar */}
+      {/* En-tête du chat avec avatar et sélecteur d'humeur */}
       <div className="bg-white dark:bg-[#1a1a1a] border-b-4 border-black dark:border-white px-5 py-4">
-        <div className="flex items-center gap-3">
-          {/* Avatar animé principal */}
-          <div className="mr-4">
-            <BotAvatar 
-              expression={avatarExpression} 
-              size="medium" 
-              animated={true}
-            />
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center">
+            {/* Avatar animé principal */}
+            <div className="mr-4">
+              <BotAvatar 
+                expression={avatarExpression} 
+                size="medium" 
+                animated={true}
+              />
+            </div>
+            <div>
+              <h3 className="text-black dark:text-white font-pixel text-base pixel-text">MAITRE CHARLATAN</h3>
+              <p className="text-pixel-accent dark:text-[#50a0ff] text-sm font-pixel mb-1">
+                &gt; IA ASSISTANT &lt;
+              </p>
+              <AIStatus />
+            </div>
           </div>
-          <div>
-            <h3 className="text-black dark:text-white font-pixel text-base pixel-text">MAITRE CHARLATAN</h3>
-            <p className="text-pixel-accent dark:text-[#50a0ff] text-sm font-pixel mb-1">
-              &gt; IA ASSISTANT &lt;
-            </p>
-            <AIStatus />
+          
+          {/* Sélecteur d'humeur */}
+          <div className="flex gap-3">
+            <button
+              onClick={() => setMood('philosophe')}
+              className={`px-4 py-3 pixel-button text-sm font-pixel ${
+                mood === 'philosophe' 
+                  ? 'bg-pixel-accent dark:bg-[#50a0ff] text-black dark:text-black' 
+                  : 'bg-white dark:bg-[#1a1a1a] text-pixel-accent dark:text-[#50a0ff]'
+              }`}
+              title="Mode Philosophe"
+            >
+              PHILO
+            </button>
+            <button
+              onClick={() => setMood('poete')}
+              className={`px-4 py-3 pixel-button text-sm font-pixel ${
+                mood === 'poete' 
+                  ? 'bg-pixel-accent dark:bg-[#50a0ff] text-black dark:text-black' 
+                  : 'bg-white dark:bg-[#1a1a1a] text-pixel-accent dark:text-[#50a0ff]'
+              }`}
+              title="Mode Poète raté"
+            >
+              POETE
+            </button>
+            <button
+              onClick={() => setMood('coach')}
+              className={`px-4 py-3 pixel-button text-sm font-pixel ${
+                mood === 'coach' 
+                  ? 'bg-pixel-accent dark:bg-[#50a0ff] text-black dark:text-black' 
+                  : 'bg-white dark:bg-[#1a1a1a] text-pixel-accent dark:text-[#50a0ff]'
+              }`}
+              title="Mode Coach low-cost"
+            >
+              COACH
+            </button>
           </div>
         </div>
       </div>

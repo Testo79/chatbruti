@@ -368,6 +368,49 @@ Modifiez ces couleurs selon vos préférences.
 
 ---
 
+## 🚀 Déploiement sur AWS
+
+Le projet peut être déployé sur AWS S3 + CloudFront pour un hébergement statique économique.
+
+### Déploiement rapide
+
+1. **Installer AWS CLI** (si pas déjà fait) :
+   ```bash
+   # Windows
+   winget install Amazon.AWSCLI
+   
+   # Configurer
+   aws configure
+   ```
+
+2. **Créer le bucket S3** :
+   ```bash
+   aws s3 mb s3://chat-rlatan --region eu-west-1
+   aws s3 website s3://chat-rlatan --index-document index.html --error-document index.html
+   ```
+
+3. **Appliquer la politique publique** :
+   ```bash
+   aws s3api put-bucket-policy --bucket chat-rlatan --policy file://bucket-policy.json
+   ```
+
+4. **Déployer** :
+   ```bash
+   # Option 1: Script PowerShell (Windows)
+   .\deploy.ps1 chat-rlatan
+   
+   # Option 2: Script Bash (Linux/Mac)
+   ./deploy.sh chat-rlatan
+   
+   # Option 3: Manuel
+   npm run build
+   aws s3 sync dist/ s3://chat-rlatan --delete
+   ```
+
+📖 **Guide complet** : Voir [DEPLOY_AWS.md](DEPLOY_AWS.md) pour les instructions détaillées, y compris la configuration CloudFront.
+
+---
+
 ## 📜 Licence
 
 Ce projet est sous licence **MIT**.

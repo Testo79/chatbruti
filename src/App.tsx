@@ -13,7 +13,7 @@ function App() {
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   // Réinitialiser les conversations quand on se connecte/déconnecte
   useEffect(() => {

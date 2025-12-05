@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BotAvatar, { AvatarExpression } from './BotAvatar';
-import { playTypewriterSound } from '../utils/typewriterSound';
 
 export interface Message {
   id: string;
@@ -33,11 +32,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         if (charIndexRef.current < message.text.length) {
           const nextChar = message.text[charIndexRef.current];
           setDisplayedText(prev => prev + nextChar);
-          
-          // Jouer le son pour certains caractères (pas pour les espaces)
-          if (nextChar !== ' ' && nextChar !== '\n') {
-            playTypewriterSound();
-          }
           
           charIndexRef.current++;
           
