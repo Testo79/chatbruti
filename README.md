@@ -222,9 +222,35 @@ Votre site est maintenant en ligne ! 🎉
 
 ---
 
-### Méthode 2 : Déploiement avec CloudFront (recommandé pour la production)
+### Méthode 2 : HTTPS avec Cloudflare (GRATUIT - Alternative recommandée)
+
+Si votre compte AWS n'est pas vérifié pour CloudFront, utilisez **Cloudflare** (100% gratuit) :
+
+#### Option A : Avec nom de domaine
+
+1. Créer un compte sur [Cloudflare](https://dash.cloudflare.com/sign-up)
+2. Ajouter votre domaine
+3. Configurer un CNAME vers votre bucket S3 avec **Proxy activé** (nuage orange)
+4. Activer "Always Use HTTPS" dans SSL/TLS
+5. Votre site sera en HTTPS automatiquement !
+
+**Guide complet** : Voir `HTTPS_AVEC_CLOUDFLARE.md`
+
+#### Option B : Sans nom de domaine (Netlify/Vercel)
+
+**Netlify** ou **Vercel** offrent HTTPS gratuit sans domaine :
+
+1. Connecter votre repo GitHub
+2. Configurer : Build command `npm run build`, Output `dist`
+3. Déployer → HTTPS automatique !
+
+**Guide complet** : Voir `HTTPS_AVEC_CLOUDFLARE.md`
+
+### Méthode 3 : Déploiement avec CloudFront (si compte AWS vérifié)
 
 CloudFront est un CDN qui améliore les performances et permet d'utiliser HTTPS.
+
+⚠️ **Note** : Nécessite un compte AWS vérifié. Si ce n'est pas le cas, utilisez Cloudflare (Méthode 2).
 
 #### Étape 1 : Créer une distribution CloudFront
 
